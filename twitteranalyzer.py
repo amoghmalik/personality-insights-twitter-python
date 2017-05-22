@@ -3,6 +3,7 @@ import requests
 import json
 import twitter
 import config
+from twitter import Twitter
 
 
 def convert_status_to_pi_content_item(s):
@@ -26,7 +27,7 @@ twitter_api = twitter.Api(consumer_key=config.twitter_consumer_key,
                           consumer_secret=config.twitter_consumer_secret,
                           access_token_key=config.twitter_access_token,
                           access_token_secret=config.twitter_access_secret,
-                          debugHTTP=True)
+                          debugHTTP=False)
 
 max_id = None
 statuses = []
@@ -60,4 +61,4 @@ r = requests.post(config.pi_url + '/v2/profile',
                   )
 
 print("Profile Request sent. Status code: %d, content-type: %s" % (r.status_code, r.headers['content-type']))
-print json.loads(r.text)
+#print json.loads(r.text)
