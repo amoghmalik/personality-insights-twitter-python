@@ -3,8 +3,16 @@ import requests
 import json
 import twitter
 import config
-from twitter import Twitter
+import csv
 
+'''
+f = open("twitter_davis_followers.csv", 'rb') 
+reader = csv.reader(f)
+usernames = list(reader) #load data in a list of lists
+'''
+
+#for i in len(usernames):
+#handle = usernames[0][0]
 
 def convert_status_to_pi_content_item(s):
     # My code here
@@ -20,14 +28,15 @@ def convert_status_to_pi_content_item(s):
         'forward': False
     }
 
-
+#Twitter handles
 handle = sys.argv[1]
+#handle = usernames[1][0]
 
 twitter_api = twitter.Api(consumer_key=config.twitter_consumer_key,
                           consumer_secret=config.twitter_consumer_secret,
                           access_token_key=config.twitter_access_token,
                           access_token_secret=config.twitter_access_secret,
-                          debugHTTP=False)
+                          debugHTTP=True)
 
 max_id = None
 statuses = []
@@ -60,5 +69,9 @@ r = requests.post(config.pi_url + '/v2/profile',
                   data=json.dumps(pi_content_items)
                   )
 
-print("Profile Request sent. Status code: %d, content-type: %s" % (r.status_code, r.headers['content-type']))
+#print("Profile Request sent. Status code: %d, content-type: %s" % (r.status_code, r.headers['content-type']))
 #print json.loads(r.text)
+print ' Writing file for: ' + handle
+outputfile = 'data/' + handle + '.txt'
+with open(outputfile, 'w') as outfile:
+    json.dump( json.loads(r.text), outfile)
